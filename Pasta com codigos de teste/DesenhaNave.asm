@@ -34,3 +34,5 @@ addi $8,$8,7540 #lugar aonde começar a ser desenhado
     addi $8,$8,4
     sw $18,0($8)
     jr $31
+
+desenhar   
