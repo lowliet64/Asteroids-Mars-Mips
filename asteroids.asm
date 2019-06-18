@@ -13,6 +13,15 @@ addi $21,$0,256
 addi $4,$0,4
 
 j main #faz com que o  codigo começe a ser executado a partido da label main
+
+intervalo:addi $1,$0,0
+	addi $2,$0,10000
+	forIntervalo: beq $1,$2,sairIntervalo
+			 nop
+			 addi $1,$1,1
+			 j forIntervalo
+	
+ 	sairIntervalo:jr $31
 #-------------------------------------------------funçao para desenhar o poligono-----------------------------------#
 
 desenhar_retangulo:  #calculo para quebra de linha 
@@ -197,9 +206,9 @@ jr $29
 #----------------------------------------------------------desenhar a nave-------------------------------------------------#
 desenhar_nave:
 #------------------parametros------------------------------------
-addi $18,$0,0xff00ff #cor da nav
-lui $8,0x1001 
-addi $8,$8,7540 #lugar aonde come�ar a ser desenhado
+#addi $18,$0,0xff00ff #cor da nav
+#lui $8,0x1001 
+#addi $8,$8,7540 #lugar aonde come�ar a ser desenhado
 #------------------------parametros---------------------
     sw $18,0($8)
     addi $8,$8,252
@@ -227,7 +236,12 @@ addi $8,$8,7540 #lugar aonde come�ar a ser desenhado
     jr $31
 #------------------------------------------------------Desenhar Nave--------------------   
 #desenha o placar
-main:
+main:addi $3,$0,0
+     addi $24,$0,10
+     addi $11,$0,7540 #nave
+     add $22,$0,1904 #asgteroid 1
+     
+animar: beq  $3,$24,sair
         #asteroide 1
         lui $8,0x1001 #endereço inicial de posicao
 	addi $10,$0,0x005500 #verde normal : cor dos pixels do poligono
@@ -235,11 +249,11 @@ main:
       	addi $16,$0,0 #j
 	addi $17,$0,12 #altura
 	addi $18,$0,12 #largura
-	addi $19,$0,1904# posiçao do pixel em que começa a ser desenhado(a partir da extremidade esquerda)
+	add $19,$0,$22# posiçao do pixel em que começa a ser desenhado(a partir da extremidade esquerda)
 	addi $21,$0,256
 	addi $4,$0,4
 	jal desenhar_retangulo
-	
+	#11,20,22,32
 	
 	
 	  #asteroide 2
@@ -267,19 +281,42 @@ main:
 	jal desenhar_retangulo
 	
 	
-	#desenhar a nave no cen�rio
-	addi $18,$0,0xff00ff #cor da nav
+	#desenhar a nave no cen�rio
+	addi $18,$0,0xfff #cor da nav
         lui $8,0x1001 
-        addi $8,$8,7540 #lugar aonde come�ar a ser desenhado
+        add $8,$8,$11 #lugar aonde come�ar a ser desenhado
         jal desenhar_nave
+        
         
         #desenhar o placar
          addi $19,$0,264 #posicao inicial do algarismo
      	  jal dig0
 	 addi $19,$0,288 #posicao inicial do algarismo
      	 jal dig0
+     	 
+     	 jal intervalo
+     	 
+     	 #desenhar a nave no cen�rio
+	addi $18,$0,0x000 #cor da nav
+        lui $8,0x1001 
+        add $8,$8,$11 #lugar aonde come�ar a ser desenhado
+        jal desenhar_nave
+        
+     	  #asteroide 1
+        lui $8,0x1001 #endereço inicial de posicao
+	addi $10,$0,0x000 #verde normal : cor dos pixels do poligono
+	addi $15,$0,0 #i
+      	addi $16,$0,0 #j
+	addi $17,$0,12 #altura
+	addi $18,$0,12 #largura
+	add $19,$0,$22# posiçao do pixel em que começa a ser desenhado(a partir da extremidade esquerda)
+	addi $21,$0,256
+	addi $4,$0,4
+	jal desenhar_retangulo
 
-     
+	addi $22,$22,260
+	addi $11,$11,-256
+      	j animar
 
  
  
